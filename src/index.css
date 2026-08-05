@@ -1,0 +1,176 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap');
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-heading: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
+    --font-logo: 'Outfit', 'Space Grotesk', sans-serif;
+    --color-sand: #f0eeed;
+    --color-blue: #002582;
+    --color-black: #0d0d0d;
+    --color-grey-80: #5c5c5c;
+    --color-grey-70: #676767;
+  }
+
+  *, *::before, *::after, body, input, button, select, textarea {
+    font-family: var(--font-body);
+  }
+
+  h1, h2, h3, h4, h5, h6, .display-text {
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  body {
+    background-color: var(--color-sand);
+    color: var(--color-black);
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+.font-display {
+  font-family: var(--font-heading);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+.font-logo {
+  font-family: var(--font-logo);
+}
+
+/* Custom Animation Classes */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 12s linear infinite;
+}
+
+@keyframes bounce-subtle {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(8px);
+    opacity: 0.4;
+  }
+}
+
+.animate-bounce-subtle {
+  animation: bounce-subtle 1.8s ease-in-out infinite;
+}
+
+/* Custom Webflow Button Animations */
+.btn-dazzle {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  background-color: #002582;
+  color: #ffffff;
+  border-radius: 9999px;
+  padding: 0.8rem 1.6rem;
+  font-weight: 500;
+  transition: all 300ms cubic-bezier(0.25, 1, 0.5, 1);
+  z-index: 1;
+}
+
+.btn-dazzle::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0%;
+  height: 0%;
+  background-color: #ffffff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 350ms ease-out, height 350ms ease-out;
+  z-index: -1;
+}
+
+.btn-dazzle:hover {
+  color: #002582;
+}
+
+.btn-dazzle:hover::before {
+  width: 140%;
+  padding-bottom: 140%;
+  height: auto;
+}
+
+/* Hover border drawing for FAQ cards */
+.faq-card {
+  position: relative;
+  transition: all 300ms ease;
+}
+
+.faq-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid transparent;
+  pointer-events: none;
+  transition: border-color 300ms ease;
+  border-radius: 0px;
+}
+
+.faq-card:hover::after {
+  border-color: #002582;
+}
+
+/* Utilities */
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Continuous Marquee Animation */
+@keyframes marquee-left {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-marquee-left {
+  display: flex;
+  width: max-content;
+  animation: marquee-left 42s linear infinite;
+  will-change: transform;
+}
+
+/* Pause marquee scrolling when any review card is hovered or focused */
+.marquee-container:hover .animate-marquee-left,
+.marquee-container:focus-within .animate-marquee-left {
+  animation-play-state: paused;
+}
+
+@media (max-width: 768px) {
+  .animate-marquee-left {
+    animation-duration: 32s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee-left {
+    animation: none !important;
+  }
+}
+

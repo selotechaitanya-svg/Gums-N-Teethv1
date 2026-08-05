@@ -1,0 +1,8 @@
+{
+  "name": "Gums N Teeth Dental Clinic",
+  "description": "Gums N Teeth Dental Clinic - Premier dental care clinic featuring interactive services, Google reviews marquee, FAQ, and appointment scheduling.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

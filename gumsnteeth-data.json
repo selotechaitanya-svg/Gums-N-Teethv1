@@ -1,0 +1,34 @@
+{
+  "nav": {
+    "logo": "https://cdn.prod.website-files.com/68cd8c43866f068b45798eed/68e825b29324fa4e5f9c645d_7c61dca1e1ddab8a5145ce2996876927_logo.svg",
+    "links": [
+      {
+        "label": "About us",
+        "href": "#about"
+      },
+      {
+        "label": "Services",
+        "href": "#services"
+      },
+      {
+        "label": "Dentists",
+        "href": "#dentists"
+      },
+      {
+        "label": "Contacts",
+        "href": "#contact"
+      }
+    ],
+    "cta": "Schedule a consultation"
+  },
+  "hero": {
+    "headSvg": "https://cdn.prod.website-files.com/68cd8c43866f068b45798eed/68d5659f054f434238dd181a_hero-head.svg",
+    "images": [
+      "https://cdn.prod.website-files.com/68cd8c43866f068b45798eed/68d12bf578650b5374ee87a9_about-hero-01.webp",
+      "https://cdn.prod.website-files.com/68cd8c43866f068b45798eed/68d12bf59e553967956f72dc_about-hero-02.webp",
+      "https://cdn.prod.website-files.com/68cd8c43866f068b45798eed/68d12bf56bfb13beada7baa2_about-hero-03.webp",
+      "https://cdn.prod.website-files.com/68cd8c43866f068b45798eed/68d12bf5c24585a77ea6c899_about-hero-04.webp"
+    ],
+    "tagline": "Delivering smiles with care, innovation, and expertise"
+  }
+}
