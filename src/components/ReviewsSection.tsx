@@ -68,7 +68,7 @@ export const ReviewsSection: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 bg-white px-3.5 py-1.5 rounded-full border border-black/10 text-xs sm:text-sm font-semibold text-[#002582] mb-3.5 shadow-2xs"
+              className="eyebrow-pill mb-4"
             >
               <GoogleIcon className="w-4 h-4" />
               <span>Google Reviews</span>
@@ -80,7 +80,7 @@ export const ReviewsSection: React.FC = () => {
               transition={{ duration: 0.6 }}
               className="font-display text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-[#002582]"
             >
-              What Our Patients Say
+              What Our Patients <span className="text-gradient-blue">Say</span>
             </motion.h2>
           </div>
 
@@ -92,7 +92,7 @@ export const ReviewsSection: React.FC = () => {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="flex flex-wrap items-center gap-4"
           >
-            <div className="bg-white border border-black/10 rounded-2xl p-3.5 sm:p-4 flex items-center gap-3.5 shadow-2xs">
+            <div className="bg-white border border-black/10 rounded-2xl p-3.5 sm:p-4 flex items-center gap-3.5 shadow-2xs card-lift">
               <div className="flex flex-col items-center justify-center bg-[#002582]/5 px-3.5 py-2 rounded-xl">
                 <span className="text-2xl font-bold text-[#002582] leading-none">5.0</span>
                 <div className="flex items-center gap-0.5 mt-1">

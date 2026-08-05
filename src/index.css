@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
 @import "tailwindcss";
 
 @layer base {
@@ -8,9 +8,9 @@
     --font-logo: 'Outfit', 'Space Grotesk', sans-serif;
     --color-sand: #f0eeed;
     --color-blue: #002582;
+    --color-blue-deep: #00185c;
+    --color-blue-soft: #dde5f6;
     --color-black: #0d0d0d;
-    --color-grey-80: #5c5c5c;
-    --color-grey-70: #676767;
   }
 
   *, *::before, *::after, body, input, button, select, textarea {
@@ -20,7 +20,7 @@
   h1, h2, h3, h4, h5, h6, .display-text {
     font-family: var(--font-heading);
     text-transform: uppercase;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.02em;
   }
 
   body {
@@ -29,6 +29,27 @@
     overflow-x: hidden;
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: var(--color-blue);
+    color: #ffffff;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-sand);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 37, 130, 0.35);
+    border-radius: 999px;
+    border: 2px solid var(--color-sand);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 37, 130, 0.65);
   }
 }
 
@@ -44,36 +65,70 @@
   font-family: var(--font-logo);
 }
 
-/* Custom Animation Classes */
-@keyframes spin-slow {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* ── Section header building blocks ─────────────────────── */
+.eyebrow-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 999px;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-blue);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
-.animate-spin-slow {
-  animation: spin-slow 12s linear infinite;
+.eyebrow-pill-dark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
 }
 
-@keyframes bounce-subtle {
-  0%, 100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  50% {
-    transform: translateY(8px);
-    opacity: 0.4;
-  }
+/* Blue gradient headline text */
+.text-gradient-blue {
+  background: linear-gradient(115deg, #002582 0%, #2455d6 52%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
-.animate-bounce-subtle {
-  animation: bounce-subtle 1.8s ease-in-out infinite;
+/* ── Decorative background utilities ────────────────────── */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(0, 37, 130, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 37, 130, 0.05) 1px, transparent 1px);
+  background-size: 46px 46px;
 }
 
-/* Custom Webflow Button Animations */
+.bg-grid-light {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 46px 46px;
+}
+
+.blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  pointer-events: none;
+}
+
+/* ── Custom Webflow Button Animations ───────────────────── */
 .btn-dazzle {
   position: relative;
   overflow: hidden;
@@ -85,7 +140,7 @@
   color: #ffffff;
   border-radius: 9999px;
   padding: 0.8rem 1.6rem;
-  font-weight: 500;
+  font-weight: 600;
   transition: all 300ms cubic-bezier(0.25, 1, 0.5, 1);
   z-index: 1;
 }
@@ -109,12 +164,61 @@
 }
 
 .btn-dazzle:hover::before {
-  width: 140%;
-  padding-bottom: 140%;
+  width: 160%;
+  padding-bottom: 160%;
   height: auto;
 }
 
-/* Hover border drawing for FAQ cards */
+/* Subtle sheen sweep across primary buttons */
+.btn-dazzle::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -80%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: skewX(-20deg);
+  transition: left 700ms ease;
+  z-index: -1;
+}
+
+.btn-dazzle:hover::after {
+  left: 130%;
+}
+
+/* Secondary outline button */
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  background: transparent;
+  color: var(--color-black);
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  border-radius: 9999px;
+  padding: 0.8rem 1.6rem;
+  font-weight: 600;
+  transition: all 300ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.btn-outline:hover {
+  border-color: var(--color-blue);
+  color: var(--color-blue);
+  background: rgba(0, 37, 130, 0.04);
+}
+
+/* ── Card lift ──────────────────────────────────────────── */
+.card-lift {
+  transition: transform 400ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 400ms ease, border-color 300ms ease;
+}
+
+.card-lift:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 48px -18px rgba(0, 37, 130, 0.22);
+}
+
+/* ── Hover border drawing for FAQ cards ─────────────────── */
 .faq-card {
   position: relative;
   transition: all 300ms ease;
@@ -134,19 +238,51 @@
   border-color: #002582;
 }
 
-/* Utilities */
-.text-balance {
-  text-wrap: balance;
+/* ── Animations ─────────────────────────────────────────── */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 12s linear infinite;
+}
+
+@keyframes bounce-subtle {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(8px); opacity: 0.4; }
+}
+
+.animate-bounce-subtle {
+  animation: bounce-subtle 1.8s ease-in-out infinite;
+}
+
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+
+.animate-float {
+  animation: float-y 6s ease-in-out infinite;
+}
+
+.animate-float-delay {
+  animation: float-y 7s ease-in-out 1.2s infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 37, 130, 0.25); }
+  50% { box-shadow: 0 0 0 12px rgba(0, 37, 130, 0); }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2.4s ease-in-out infinite;
 }
 
 /* Continuous Marquee Animation */
 @keyframes marquee-left {
-  0% {
-    transform: translate3d(0, 0, 0);
-  }
-  100% {
-    transform: translate3d(-50%, 0, 0);
-  }
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
 }
 
 .animate-marquee-left {
@@ -156,21 +292,33 @@
   will-change: transform;
 }
 
-/* Pause marquee scrolling when any review card is hovered or focused */
+/* Pause marquee scrolling when hovered or focused */
 .marquee-container:hover .animate-marquee-left,
 .marquee-container:focus-within .animate-marquee-left {
   animation-play-state: paused;
 }
 
+/* Faster variant for the hero trust strip */
+.animate-marquee-fast {
+  animation-duration: 28s;
+}
+
 @media (max-width: 768px) {
-  .animate-marquee-left {
+  .animate-marquee-left:not(.animate-marquee-fast) {
     animation-duration: 32s;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-marquee-left {
+  .animate-marquee-left,
+  .animate-float,
+  .animate-float-delay,
+  .animate-pulse-glow {
     animation: none !important;
   }
 }
 
+/* ── Utilities ──────────────────────────────────────────── */
+.text-balance {
+  text-wrap: balance;
+}

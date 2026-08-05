@@ -3,7 +3,7 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { FAQ_DATA } from '../data/dazzleData';
 import { FaqItem } from '../types';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, HelpCircle } from 'lucide-react';
 
 interface FaqCardProps {
   faq: FaqItem;
@@ -26,33 +26,39 @@ const FaqCard: React.FC<FaqCardProps> = ({ faq }) => {
       <motion.div
         animate={{
           y: isHovered ? -18 : 0,
-          borderColor: isHovered ? '#1F49C6' : '#DADADA',
+          borderColor: isHovered ? '#002582' : '#DADADA',
           boxShadow: isHovered
-            ? '0 20px 25px -5px rgba(31, 73, 198, 0.12), 0 8px 10px -6px rgba(31, 73, 198, 0.06)'
+            ? '0 24px 32px -8px rgba(0, 37, 130, 0.16), 0 8px 10px -6px rgba(0, 37, 130, 0.08)'
             : '0 0px 0px rgba(0,0,0,0)',
         }}
         transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
         className="w-full h-[246px] bg-white rounded-2xl border p-5 flex flex-col justify-between relative overflow-hidden transition-colors"
       >
+        {/* Hover gradient accent */}
+        <div
+          className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#002582] via-sky-400 to-transparent transition-opacity duration-300 ${
+            isHovered ? 'opacity-100' : 'opacity-0'
+          }`}
+        />
+
         {/* Number & Thin Divider Line */}
         <div>
           <span
-            className={`text-xs font-semibold tracking-wider transition-colors duration-300 ${
-              isHovered ? 'text-[#1F49C6]' : 'text-black/60'
+            className={`text-xs font-bold tracking-wider transition-colors duration-300 ${
+              isHovered ? 'text-[#002582]' : 'text-black/50'
             }`}
           >
             {faq.number}
           </span>
           <div
             className={`w-full h-[1px] my-3 transition-colors duration-300 ${
-              isHovered ? 'bg-[#1F49C6]/30' : 'bg-[#DADADA]'
+              isHovered ? 'bg-[#002582]/30' : 'bg-[#DADADA]'
             }`}
           />
         </div>
 
         {/* Question & Answer Container */}
         <div className="flex-1 flex flex-col justify-end">
-          {/* Question Text */}
           <motion.h3
             animate={{ y: isHovered ? -4 : 0 }}
             transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
@@ -61,7 +67,6 @@ const FaqCard: React.FC<FaqCardProps> = ({ faq }) => {
             {faq.question}
           </motion.h3>
 
-          {/* Answer Text (Hidden initially, revealed on hover) */}
           <AnimatePresence>
             {isHovered && (
               <motion.p
@@ -69,7 +74,7 @@ const FaqCard: React.FC<FaqCardProps> = ({ faq }) => {
                 animate={{ opacity: 1, height: 'auto', marginTop: 8 }}
                 exit={{ opacity: 0, height: 0, marginTop: 0 }}
                 transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
-                className="text-xs font-normal text-[#1F49C6] leading-relaxed overflow-hidden"
+                className="text-xs font-normal text-[#002582] leading-relaxed overflow-hidden"
               >
                 {faq.answer}
               </motion.p>
@@ -112,19 +117,38 @@ export const FaqSection: React.FC = () => {
   }, [scrollPrev, scrollNext]);
 
   return (
-    <section className="py-24 md:py-36 bg-white overflow-hidden select-none">
-      <div className="max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-12">
-        {/* Top Header: FAQ Title + Carousel Prev/Next Circular Buttons */}
-        <div className="flex items-center justify-between gap-6 mb-12 md:mb-16">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-5xl sm:text-7xl md:text-8xl font-medium tracking-tight text-[#002582] uppercase"
-          >
-            FAQ
-          </motion.h2>
+    <section
+      id="faq"
+      className="py-24 md:py-36 bg-white overflow-hidden select-none scroll-mt-20 relative"
+    >
+      {/* Decorative blobs */}
+      <div className="blob top-[-10%] right-[-8%] w-[400px] h-[400px] bg-[#002582]/5" />
+      <div className="blob bottom-[-15%] left-[-8%] w-[380px] h-[380px] bg-sky-200/40" />
+
+      <div className="relative max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-12">
+        {/* Top Header */}
+        <div className="flex items-end justify-between gap-6 mb-12 md:mb-16">
+          <div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="eyebrow-pill mb-4"
+            >
+              <HelpCircle className="w-4 h-4" />
+              <span>Good to Know</span>
+            </motion.div>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-5xl sm:text-7xl md:text-8xl font-medium tracking-tight text-[#002582] uppercase"
+            >
+              FAQ
+            </motion.h2>
+          </div>
 
           {/* Navigation Buttons */}
           <motion.div
@@ -132,19 +156,19 @@ export const FaqSection: React.FC = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="flex items-center gap-3 shrink-0"
+            className="flex items-center gap-3 shrink-0 pb-1"
           >
             <button
               onClick={scrollPrev}
               aria-label="Previous FAQ slide"
-              className="w-12 h-12 rounded-full border border-[#DADADA] bg-white flex items-center justify-center text-black hover:border-[#1F49C6] hover:bg-[#1F49C6] hover:text-white transition-all shadow-xs active:scale-95 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#1F49C6]"
+              className="w-12 h-12 rounded-full border border-[#DADADA] bg-white flex items-center justify-center text-black hover:border-[#002582] hover:bg-[#002582] hover:text-white transition-all shadow-xs active:scale-95 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#002582]"
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
             <button
               onClick={scrollNext}
               aria-label="Next FAQ slide"
-              className="w-12 h-12 rounded-full border border-[#DADADA] bg-white flex items-center justify-center text-black hover:border-[#1F49C6] hover:bg-[#1F49C6] hover:text-white transition-all shadow-xs active:scale-95 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#1F49C6]"
+              className="w-12 h-12 rounded-full border border-[#DADADA] bg-white flex items-center justify-center text-black hover:border-[#002582] hover:bg-[#002582] hover:text-white transition-all shadow-xs active:scale-95 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#002582]"
             >
               <ArrowRight className="w-5 h-5" />
             </button>

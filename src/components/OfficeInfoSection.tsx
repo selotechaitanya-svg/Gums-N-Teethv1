@@ -15,7 +15,7 @@ export const OfficeInfoSection: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 bg-white px-3.5 py-1.5 rounded-full border border-black/10 text-xs sm:text-sm font-semibold text-[#002582] mb-3.5 shadow-2xs"
+              className="eyebrow-pill mb-4"
             >
               <MapPin className="w-4 h-4 text-[#002582]" />
               <span>Google Maps Verified Clinic</span>
@@ -27,7 +27,7 @@ export const OfficeInfoSection: React.FC = () => {
               transition={{ duration: 0.6 }}
               className="font-display text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-[#002582]"
             >
-              Office Information
+              Office <span className="text-gradient-blue">Information</span>
             </motion.h2>
           </div>
 
@@ -55,7 +55,7 @@ export const OfficeInfoSection: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="bg-white p-7 rounded-[24px] border border-black/10 shadow-2xs hover:shadow-lg transition-shadow flex flex-col justify-between"
+            className="bg-white p-7 rounded-[24px] border border-black/10 shadow-2xs card-lift hover:border-[#002582]/25 hover:shadow-2xl flex flex-col justify-between"
           >
             <div>
               <div className="w-12 h-12 rounded-2xl bg-[#002582]/10 text-[#002582] flex items-center justify-center mb-5">
@@ -83,7 +83,7 @@ export const OfficeInfoSection: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="bg-white p-7 rounded-[24px] border border-black/10 shadow-2xs hover:shadow-lg transition-shadow flex flex-col justify-between"
+            className="bg-white p-7 rounded-[24px] border border-black/10 shadow-2xs card-lift hover:border-[#002582]/25 hover:shadow-2xl flex flex-col justify-between"
           >
             <div>
               <div className="w-12 h-12 rounded-2xl bg-[#002582]/10 text-[#002582] flex items-center justify-center mb-5">
@@ -132,7 +132,7 @@ export const OfficeInfoSection: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="bg-white p-7 rounded-[24px] border border-black/10 shadow-2xs hover:shadow-lg transition-shadow flex flex-col justify-between"
+            className="bg-white p-7 rounded-[24px] border border-black/10 shadow-2xs card-lift hover:border-[#002582]/25 hover:shadow-2xl flex flex-col justify-between"
           >
             <div>
               <div className="w-12 h-12 rounded-2xl bg-[#002582]/10 text-[#002582] flex items-center justify-center mb-5">
@@ -163,7 +163,7 @@ export const OfficeInfoSection: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="bg-white p-7 rounded-[24px] border border-black/10 shadow-2xs hover:shadow-lg transition-shadow flex flex-col justify-between"
+            className="bg-white p-7 rounded-[24px] border border-black/10 shadow-2xs card-lift hover:border-[#002582]/25 hover:shadow-2xl flex flex-col justify-between"
           >
             <div>
               <div className="w-12 h-12 rounded-2xl bg-[#002582]/10 text-[#002582] flex items-center justify-center mb-5">
@@ -232,7 +232,7 @@ export const OfficeInfoSection: React.FC = () => {
             </a>
           </div>
 
-          <div className="w-full h-[320px] sm:h-[400px] rounded-[20px] overflow-hidden border border-black/10 bg-gray-100 relative">
+          <div className="w-full h-[320px] sm:h-[400px] rounded-[20px] overflow-hidden border border-black/10 bg-gray-100 relative shadow-inner">
             <iframe
               title="Gums and Teeth Dental Clinic Google Maps Location"
               src="https://maps.google.com/maps?q=Gums%20N%20Teeth%20Dental%20Clinic%2C%20Beltarodi%20Rd%2C%20opposite%20om%20hardware%2C%20near%20Besa%2C%20Harihar%20Nagar%2C%20Somalwada%2C%20Besa%20Pipla%2C%20Maharashtra%20440037&t=&z=16&ie=UTF8&iwloc=&output=embed"

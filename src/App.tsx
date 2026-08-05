@@ -9,6 +9,7 @@ import { ReviewsSection } from './components/ReviewsSection';
 import { FaqSection } from './components/FaqSection';
 import { AppointmentSection } from './components/AppointmentSection';
 import { OfficeInfoSection } from './components/OfficeInfoSection';
+import { CtaBanner } from './components/CtaBanner';
 import { Footer } from './components/Footer';
 import { ServiceModal } from './components/ServiceModal';
 import { ServiceItem } from './types';
@@ -71,6 +72,9 @@ export default function App() {
 
         {/* Office Information & Google Maps Section */}
         <OfficeInfoSection />
+
+        {/* CTA Banner */}
+        <CtaBanner onOpenConsultation={() => scrollToAppointment()} />
       </main>
 
       {/* Footer */}

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { SERVICES_DATA } from '../data/dazzleData';
 import { ServiceItem } from '../types';
-import { ArrowUpRight, Plus, CheckCircle2 } from 'lucide-react';
+import { ArrowUpRight, Plus, Stethoscope } from 'lucide-react';
 
 interface ServicesSectionProps {
   onSelectService: (service: ServiceItem) => void;
@@ -14,23 +14,40 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
   onOpenConsultation,
 }) => {
   const [hoveredService, setHoveredService] = useState<ServiceItem | null>(
-    SERVICES_DATA[0]
+    SERVICES_DATA[0],
   );
 
   return (
-    <section id="services" className="py-20 md:py-32 bg-[#f0eeed] scroll-mt-20">
-      <div className="max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-12">
+    <section
+      id="services"
+      className="py-20 md:py-32 bg-[#f0eeed] scroll-mt-20 relative overflow-hidden"
+    >
+      {/* Decorative blob */}
+      <div className="blob top-[20%] left-[-10%] w-[420px] h-[420px] bg-[#002582]/8" />
+
+      <div className="relative max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-12">
         {/* Services Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 pb-8 border-b border-black/10">
           <div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="eyebrow-pill mb-4"
+            >
+              <Stethoscope className="w-4 h-4" />
+              <span>What We Offer</span>
+            </motion.div>
             <motion.h2
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7 }}
-              className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-medium tracking-tight text-[#002582] lowercase"
+              className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-medium tracking-tight lowercase"
             >
-              services
+              <span className="text-[#002582]">services</span>{' '}
+              <span className="text-gradient-blue">&amp; care</span>
             </motion.h2>
           </div>
 
@@ -51,7 +68,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
           </div>
         </div>
 
-        {/* Services Main Container: Interactive Hover List + Dynamic Preview Image */}
+        {/* Services Main Container */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Services List */}
           <div className="lg:col-span-7 flex flex-col divide-y divide-black/10 border-t border-b border-black/10">
@@ -65,9 +82,19 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                   onClick={() => onSelectService(service)}
                   className="group py-6 md:py-8 cursor-pointer transition-colors duration-300 relative"
                 >
-                  <div className="flex items-start justify-between gap-4">
+                  {/* Left accent bar on hover */}
+                  <div
+                    className={`absolute left-0 top-1/2 -translate-y-1/2 w-1 h-0 rounded-full bg-[#002582] transition-all duration-400 ${
+                      isHovered ? 'h-3/5 opacity-100' : 'opacity-0'
+                    }`}
+                  />
+                  <div className="flex items-start justify-between gap-4 pl-2 md:pl-4">
                     <div className="flex items-baseline gap-4 md:gap-6">
-                      <span className="text-lg md:text-xl font-medium text-black/40 group-hover:text-[#002582] transition-colors">
+                      <span
+                        className={`text-lg md:text-xl font-bold transition-colors ${
+                          isHovered ? 'text-[#002582]' : 'text-black/35'
+                        }`}
+                      >
                         {service.number}
                       </span>
                       <h3 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-black group-hover:text-[#002582] transition-colors">
@@ -75,20 +102,26 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                       </h3>
                     </div>
 
-                    <div className="w-10 h-10 rounded-full bg-white border border-black/10 flex items-center justify-center group-hover:bg-[#002582] group-hover:text-white transition-all group-hover:scale-110">
-                      <Plus className="w-5 h-5 transition-transform group-hover:rotate-45" />
+                    <div
+                      className={`w-11 h-11 rounded-full border flex items-center justify-center transition-all duration-300 group-hover:scale-110 ${
+                        isHovered
+                          ? 'bg-[#002582] border-[#002582] text-white rotate-45'
+                          : 'bg-white border-black/10 text-black'
+                      }`}
+                    >
+                      <Plus className="w-5 h-5" />
                     </div>
                   </div>
 
-                  <p className="mt-3 text-sm md:text-base text-black/60 pl-9 md:pl-12 max-w-2xl line-clamp-2 group-hover:text-black/80 transition-colors">
+                  <p className="mt-3 text-sm md:text-base text-black/60 pl-2 md:pl-10 max-w-2xl line-clamp-2 group-hover:text-black/80 transition-colors">
                     {service.description}
                   </p>
 
-                  <div className="mt-4 pl-9 md:pl-12 flex flex-wrap gap-2">
+                  <div className="mt-4 pl-2 md:pl-10 flex flex-wrap gap-2">
                     {service.tags.slice(0, 3).map((tag) => (
                       <span
                         key={tag}
-                        className="text-xs px-3 py-1 rounded-full bg-white/70 border border-black/5 text-black/70 font-medium"
+                        className="text-xs px-3 py-1 rounded-full bg-white/70 border border-black/5 text-black/70 font-medium group-hover:border-[#002582]/25 transition-colors"
                       >
                         {tag}
                       </span>
@@ -117,19 +150,19 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                       alt={hoveredService.title}
                       className="w-full h-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent p-8 flex flex-col justify-end text-white">
-                      <div className="text-xs uppercase tracking-wider font-semibold text-white/80 mb-1">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent p-8 flex flex-col justify-end text-white">
+                      <div className="inline-flex items-center gap-2 text-xs uppercase tracking-wider font-semibold text-white bg-white/15 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20 w-fit mb-4">
                         Service {hoveredService.number}
                       </div>
                       <h4 className="text-3xl font-bold mb-2">
                         {hoveredService.title}
                       </h4>
-                      <p className="text-sm text-white/90 line-clamp-3 mb-4">
+                      <p className="text-sm text-white/90 line-clamp-3 mb-5">
                         {hoveredService.description}
                       </p>
                       <button
                         onClick={() => onSelectService(hoveredService)}
-                        className="inline-flex items-center gap-2 text-sm font-semibold text-white underline underline-offset-4 hover:text-white/80 transition-colors"
+                        className="inline-flex items-center gap-2 bg-white text-[#002582] w-fit px-5 py-2.5 rounded-full text-sm font-bold hover:bg-[#002582] hover:text-white transition-colors"
                       >
                         <span>Learn more & book</span>
                         <ArrowUpRight className="w-4 h-4" />
