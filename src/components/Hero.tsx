@@ -1,5 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import {
+  motion,
+  AnimatePresence,
+  useMotionValue,
+  useSpring,
+  useReducedMotion,
+} from 'motion/react';
 import {
   ArrowDown,
   Maximize2,
@@ -17,6 +23,8 @@ import {
   Award,
 } from 'lucide-react';
 import { GOOGLE_REVIEWS_DATA } from '../data/googleReviewsData';
+import { AmbientBackground } from './ui/AmbientBackground';
+import { MagneticButton } from './ui/MagneticButton';
 
 interface HeroProps {
   onScrollToAbout?: () => void;
@@ -83,11 +91,48 @@ const TRUST_ITEMS = [
   { icon: BadgeCheck, label: 'Certified Specialists' },
 ];
 
+/** Word entrance variants for the headline */
+const wordVariants = {
+  hidden: { opacity: 0, y: 44, rotateX: 55, filter: 'blur(6px)' },
+  visible: {
+    opacity: 1,
+    y: 0,
+    rotateX: 0,
+    filter: 'blur(0px)',
+    transition: { type: 'spring', stiffness: 120, damping: 18, mass: 0.9 },
+  },
+};
+
+const ease = [0.16, 1, 0.3, 1] as const;
+
 export const Hero: React.FC<HeroProps> = ({ onScrollToAbout, onOpenConsultation }) => {
   // Deck order state: indices of HERO_STACK_DATA in order from top to bottom
   const [deckOrder, setDeckOrder] = useState<number[]>([0, 1, 2, 3]);
   const [hoveredCardId, setHoveredCardId] = useState<string | null>(null);
   const [previewCard, setPreviewCard] = useState<HeroImageCard | null>(null);
+  const reduceMotion = useReducedMotion();
+
+  // Parallax tilt for the whole right visual (spring-smoothed)
+  const tiltX = useSpring(useMotionValue(0), { stiffness: 90, damping: 16, mass: 0.6 });
+  const tiltY = useSpring(useMotionValue(0), { stiffness: 90, damping: 16, mass: 0.6 });
+  const visualRef = useRef<HTMLDivElement>(null);
+
+  const handleVisualMove = useCallback(
+    (e: React.MouseEvent) => {
+      if (reduceMotion || !visualRef.current) return;
+      const rect = visualRef.current.getBoundingClientRect();
+      const px = (e.clientX - rect.left) / rect.width - 0.5;
+      const py = (e.clientY - rect.top) / rect.height - 0.5;
+      tiltY.set(px * 5);
+      tiltX.set(py * -4);
+    },
+    [reduceMotion, tiltX, tiltY],
+  );
+
+  const handleVisualLeave = useCallback(() => {
+    tiltX.set(0);
+    tiltY.set(0);
+  }, [tiltX, tiltY]);
 
   // Auto shuffle / cycle timer every 3.5 seconds
   useEffect(() => {
@@ -117,11 +162,17 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToAbout, onOpenConsultation 
 
   return (
     <section className="relative min-h-screen pt-32 md:pt-44 pb-0 overflow-hidden bg-[#f0eeed] flex flex-col">
-      {/* ── Decorative background ───────────────────────── */}
-      <div className="absolute inset-0 bg-grid opacity-70 pointer-events-none" />
-      <div className="blob top-[-12%] right-[-8%] w-[520px] h-[520px] bg-[#002582]/10" />
-      <div className="blob bottom-[18%] left-[-12%] w-[480px] h-[480px] bg-sky-300/30" />
-      <div className="blob bottom-[-20%] right-[15%] w-[420px] h-[420px] bg-[#002582]/8" />
+      {/* ── Decorative background: blobs + particles + masked grid ── */}
+      <AmbientBackground variant="light" />
+      <div className="absolute inset-0 bg-grid bg-grid-mask opacity-70 pointer-events-none" />
+      <div
+        className="absolute top-[16%] left-[46%] w-[46rem] h-[46rem] rounded-full pointer-events-none opacity-70"
+        style={{
+          background:
+            'radial-gradient(closest-side, rgba(56,189,248,0.10), rgba(36,85,214,0.05) 45%, transparent 75%)',
+        }}
+        aria-hidden="true"
+      />
 
       <div className="relative w-full max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-12 flex-1 flex flex-col justify-center">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center py-10 lg:py-6">
@@ -130,30 +181,60 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToAbout, onOpenConsultation 
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="eyebrow-pill"
+              transition={{ duration: 0.6, ease }}
+              className="eyebrow-pill glass"
             >
               <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
               <span>Nagpur's Trusted Dental Clinic</span>
             </motion.div>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 34 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="font-logo text-6xl sm:text-7xl xl:text-8xl font-black tracking-tight uppercase leading-[0.95] mt-6 select-none"
-            >
-              <span className="text-[#002582]">Gums</span>{' '}
-              <span className="font-body text-black font-normal text-3xl sm:text-4xl xl:text-5xl lowercase italic mx-0.5">
-                n
-              </span>{' '}
-              <span className="text-gradient-blue">Teeth</span>
-            </motion.h1>
+            {/* Staggered headline */}
+            <h1 className="font-logo text-6xl sm:text-7xl xl:text-8xl font-black tracking-tight uppercase leading-[0.95] mt-6 select-none">
+              <span className="sr-only">Gums n Teeth</span>
+              <motion.span
+                aria-hidden="true"
+                className="flex flex-wrap items-center"
+                initial="hidden"
+                animate="visible"
+                variants={{
+                  hidden: {},
+                  visible: { transition: { staggerChildren: 0.09, delayChildren: 0.1 } },
+                }}
+              >
+                {['Gums'].map((w, i) => (
+                  <motion.span
+                    key={i}
+                    variants={wordVariants}
+                    className="text-[#002582] inline-block"
+                    style={{ transformPerspective: 600 }}
+                  >
+                    {w}
+                  </motion.span>
+                ))}
+                <motion.span
+                  variants={wordVariants}
+                  className="font-body text-black font-normal text-3xl sm:text-4xl xl:text-5xl lowercase italic mx-0.5 inline-block"
+                  style={{ transformPerspective: 600 }}
+                >
+                  n
+                </motion.span>
+                {['Teeth'].map((w, i) => (
+                  <motion.span
+                    key={i}
+                    variants={wordVariants}
+                    className="text-gradient-blue inline-block"
+                    style={{ transformPerspective: 600 }}
+                  >
+                    {w}
+                  </motion.span>
+                ))}
+              </motion.span>
+            </h1>
 
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.22 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
               className="mt-4 text-xs sm:text-sm md:text-base font-extrabold text-black/60 tracking-[0.25em] uppercase"
             >
               Dental Clinic &amp; Implant Center
@@ -162,7 +243,7 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToAbout, onOpenConsultation 
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
               className="mt-6 text-base sm:text-lg md:text-xl text-black/75 leading-relaxed max-w-xl font-medium"
             >
               Delivering smiles with{' '}
@@ -177,20 +258,19 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToAbout, onOpenConsultation 
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
+              transition={{ duration: 0.6, delay: 0.7 }}
               className="mt-8 flex flex-wrap items-center gap-3.5"
             >
-              <button
-                onClick={() => onOpenConsultation?.()}
-                className="btn-dazzle text-base px-7 py-3.5 cursor-pointer"
-              >
-                <span>Book Consultation</span>
-                <ArrowUpRight className="w-5 h-5" />
-              </button>
-              <a
-                href="#services"
-                className="btn-outline text-base px-7 py-3.5"
-              >
+              <MagneticButton strength={0.3}>
+                <button
+                  onClick={() => onOpenConsultation?.()}
+                  className="btn-dazzle text-base px-7 py-3.5 cursor-pointer"
+                >
+                  <span>Book Consultation</span>
+                  <ArrowUpRight className="w-5 h-5" />
+                </button>
+              </MagneticButton>
+              <a href="#services" className="btn-outline text-base px-7 py-3.5">
                 <span>Explore Services</span>
               </a>
             </motion.div>
@@ -199,21 +279,24 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToAbout, onOpenConsultation 
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
+              transition={{ duration: 0.6, delay: 0.8 }}
               className="mt-9 flex flex-wrap items-center gap-x-8 gap-y-4"
             >
               <div className="flex items-center gap-3">
                 <div className="flex -space-x-3">
-                  {avatars.map((review) => {
+                  {avatars.map((review, i) => {
                     const initial = review.authorName.charAt(0).toUpperCase();
                     return (
-                      <div
+                      <motion.div
                         key={review.id}
-                        className="w-10 h-10 rounded-full border-2 border-white bg-[#002582] text-white flex items-center justify-center text-xs font-bold shadow-md"
+                        initial={{ opacity: 0, scale: 0.4 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.85 + i * 0.08, type: 'spring', stiffness: 260, damping: 18 }}
+                        className="w-10 h-10 rounded-full border-2 border-[#f0eeed] bg-gradient-to-br from-[#002582] to-[#123fb8] text-white flex items-center justify-center text-xs font-bold shadow-md"
                         title={review.authorName}
                       >
                         {initial}
-                      </div>
+                      </motion.div>
                     );
                   })}
                 </div>
@@ -230,7 +313,7 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToAbout, onOpenConsultation 
               </div>
 
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-[#002582]/10 text-[#002582] flex items-center justify-center">
+                <div className="w-10 h-10 rounded-full bg-[#002582]/10 text-[#002582] flex items-center justify-center glow-soft">
                   <Award className="w-5 h-5" />
                 </div>
                 <div>
@@ -244,15 +327,21 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToAbout, onOpenConsultation 
           </div>
 
           {/* ── RIGHT: Interactive 3D Fan Deck ──────────── */}
-          <div className="lg:col-span-7 order-1 lg:order-2 relative">
-            {/* Floating stat chips */}
+          <div
+            ref={visualRef}
+            onMouseMove={handleVisualMove}
+            onMouseLeave={handleVisualLeave}
+            className="lg:col-span-7 order-1 lg:order-2 relative"
+          >
+            {/* Floating stat chips (parallax layers) */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: 0.7 }}
-              className="hidden lg:flex absolute top-4 left-0 xl:left-2 z-20 items-center gap-2.5 bg-white/90 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-black/10 shadow-xl animate-float"
+              style={{ y: tiltX }}
+              className="hidden lg:flex absolute top-4 left-0 xl:left-2 z-20 items-center gap-2.5 glass-strong px-4 py-2.5 rounded-2xl border border-white/70 animate-float"
             >
-              <div className="w-9 h-9 rounded-xl bg-[#002582] text-white flex items-center justify-center">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#002582] to-[#123fb8] text-white flex items-center justify-center shadow-md">
                 <Award className="w-4.5 h-4.5" />
               </div>
               <div>
@@ -267,9 +356,10 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToAbout, onOpenConsultation 
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: 0.85 }}
-              className="hidden lg:flex absolute bottom-16 right-0 xl:right-4 z-20 items-center gap-2.5 bg-white/90 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-black/10 shadow-xl animate-float-delay"
+              style={{ y: tiltX }}
+              className="hidden lg:flex absolute bottom-16 right-0 xl:right-4 z-20 items-center gap-2.5 glass-strong px-4 py-2.5 rounded-2xl border border-white/70 animate-float-delay"
             >
-              <div className="w-9 h-9 rounded-xl bg-emerald-500 text-white flex items-center justify-center">
+              <div className="w-9 h-9 rounded-xl bg-emerald-500 text-white flex items-center justify-center shadow-md">
                 <Smile className="w-4.5 h-4.5" />
               </div>
               <div>
@@ -280,12 +370,13 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToAbout, onOpenConsultation 
               </div>
             </motion.div>
 
-            {/* Deck */}
+            {/* Deck with 3D parallax wrapper */}
             <motion.div
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="relative w-full h-[320px] sm:h-[400px] lg:h-[500px] flex items-center justify-center"
+              transition={{ duration: 0.8, delay: 0.2, ease }}
+              style={{ rotateX: tiltX, rotateY: tiltY, transformPerspective: 1400 }}
+              className="relative w-full h-[320px] sm:h-[400px] lg:h-[500px] flex items-center justify-center will-change-transform"
             >
               {HERO_STACK_DATA.map((card, originalIndex) => {
                 const positionInDeck = deckOrder.indexOf(originalIndex);
@@ -301,7 +392,7 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToAbout, onOpenConsultation 
                 return (
                   <motion.div
                     key={card.id}
-                    layout
+                    layout={!reduceMotion}
                     initial={{ opacity: 0, y: 100, scale: 0.8 }}
                     animate={{
                       opacity: 1,
@@ -329,11 +420,13 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToAbout, onOpenConsultation 
                     role="button"
                     tabIndex={0}
                     aria-label={`View details: ${card.title}`}
-                    className="absolute top-2 w-[230px] sm:w-[290px] lg:w-[350px] xl:w-[400px] aspect-[4/3] rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl border-4 border-white cursor-pointer group bg-black/5 select-none"
+                    className="absolute top-2 w-[230px] sm:w-[290px] lg:w-[350px] xl:w-[400px] aspect-[4/3] rounded-3xl overflow-hidden shadow-[0_24px_60px_-18px_rgba(0,0,0,0.45)] hover:shadow-[0_36px_80px_-20px_rgba(0,37,130,0.5)] border-4 border-white cursor-pointer group bg-black/5 select-none transition-shadow duration-500"
                   >
                     <img
                       src={card.src}
                       alt={card.alt}
+                      loading={originalIndex < 2 ? 'eager' : 'lazy'}
+                      decoding="async"
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-108"
                     />
 
@@ -379,10 +472,10 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToAbout, onOpenConsultation 
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
-                className="mt-5 sm:mt-6 w-full max-w-xl mx-auto bg-white/90 backdrop-blur-md px-5 py-3.5 rounded-2xl border border-black/10 shadow-xs flex items-center justify-between gap-4"
+                className="mt-5 sm:mt-6 w-full max-w-xl mx-auto glass-strong px-5 py-3.5 rounded-2xl border border-white/70 flex items-center justify-between gap-4"
               >
                 <div className="flex items-center gap-3 overflow-hidden">
-                  <div className="w-9 h-9 rounded-xl bg-[#002582]/10 text-[#002582] flex items-center justify-center shrink-0">
+                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#002582] to-[#123fb8] text-white flex items-center justify-center shrink-0 shadow-md">
                     <Sparkles className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
@@ -397,7 +490,7 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToAbout, onOpenConsultation 
 
                 <button
                   onClick={() => onOpenConsultation?.(topCard.title)}
-                  className="px-4 py-2 rounded-full bg-[#002582] hover:bg-black text-white text-xs font-extrabold transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs shrink-0"
+                  className="px-4 py-2 rounded-full bg-gradient-to-r from-[#002582] to-[#123fb8] hover:from-black hover:to-black text-white text-xs font-extrabold transition-all flex items-center gap-1.5 cursor-pointer shadow-md shrink-0 active:scale-95"
                 >
                   <span>Book Now</span>
                   <ArrowUpRight className="w-3.5 h-3.5" />
@@ -409,16 +502,13 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToAbout, onOpenConsultation 
       </div>
 
       {/* ── Bottom trust marquee ─────────────────────────── */}
-      <div className="relative z-10 border-t border-black/10 bg-white/50 backdrop-blur-sm mt-10">
+      <div className="relative z-10 border-t border-black/10 bg-white/60 backdrop-blur-md mt-10">
         <div className="marquee-container w-full overflow-hidden py-4">
           <div className="animate-marquee-left animate-marquee-fast items-center gap-12 px-6">
             {[...TRUST_ITEMS, ...TRUST_ITEMS].map((item, index) => {
               const Icon = item.icon;
               return (
-                <div
-                  key={`${item.label}-${index}`}
-                  className="flex items-center gap-2.5 shrink-0"
-                >
+                <div key={`${item.label}-${index}`} className="flex items-center gap-2.5 shrink-0">
                   <div className="w-8 h-8 rounded-full bg-[#002582]/8 text-[#002582] flex items-center justify-center">
                     <Icon className="w-4 h-4" />
                   </div>
@@ -445,7 +535,7 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToAbout, onOpenConsultation 
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.5, delay: 1 }}
-        className="hidden md:flex absolute bottom-24 right-8 xl:right-14 z-20 w-12 h-12 rounded-full bg-white border border-black/10 text-[#002582] items-center justify-center shadow-lg hover:bg-[#002582] hover:text-white hover:scale-110 active:scale-95 transition-all group"
+        className="hidden md:flex absolute bottom-24 right-8 xl:right-14 z-20 w-12 h-12 rounded-full glass-strong text-[#002582] items-center justify-center shadow-lg hover:bg-gradient-to-r hover:from-[#002582] hover:to-[#123fb8] hover:text-white hover:scale-110 active:scale-95 transition-all group"
         aria-label="Scroll down to About Section"
       >
         <div className="animate-bounce-subtle">

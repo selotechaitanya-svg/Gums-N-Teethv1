@@ -28,7 +28,7 @@ const FaqCard: React.FC<FaqCardProps> = ({ faq }) => {
           y: isHovered ? -18 : 0,
           borderColor: isHovered ? '#002582' : '#DADADA',
           boxShadow: isHovered
-            ? '0 24px 32px -8px rgba(0, 37, 130, 0.16), 0 8px 10px -6px rgba(0, 37, 130, 0.08)'
+            ? '0 28px 48px -12px rgba(0, 37, 130, 0.22), 0 8px 10px -6px rgba(0, 37, 130, 0.08)'
             : '0 0px 0px rgba(0,0,0,0)',
         }}
         transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
@@ -37,6 +37,12 @@ const FaqCard: React.FC<FaqCardProps> = ({ faq }) => {
         {/* Hover gradient accent */}
         <div
           className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#002582] via-sky-400 to-transparent transition-opacity duration-300 ${
+            isHovered ? 'opacity-100' : 'opacity-0'
+          }`}
+        />
+        {/* Soft hover glow */}
+        <div
+          className={`absolute -top-12 -right-12 w-32 h-32 rounded-full bg-gradient-to-br from-sky-300/25 to-transparent transition-opacity duration-500 ${
             isHovered ? 'opacity-100' : 'opacity-0'
           }`}
         />
@@ -161,14 +167,14 @@ export const FaqSection: React.FC = () => {
             <button
               onClick={scrollPrev}
               aria-label="Previous FAQ slide"
-              className="w-12 h-12 rounded-full border border-[#DADADA] bg-white flex items-center justify-center text-black hover:border-[#002582] hover:bg-[#002582] hover:text-white transition-all shadow-xs active:scale-95 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#002582]"
+              className="w-12 h-12 rounded-full border border-[#DADADA] bg-white flex items-center justify-center text-black hover:border-[#002582] hover:bg-gradient-to-r hover:from-[#002582] hover:to-[#123fb8] hover:text-white hover:shadow-[0_12px_28px_-10px_rgba(0,37,130,0.5)] transition-all shadow-xs active:scale-95 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#002582]"
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
             <button
               onClick={scrollNext}
               aria-label="Next FAQ slide"
-              className="w-12 h-12 rounded-full border border-[#DADADA] bg-white flex items-center justify-center text-black hover:border-[#002582] hover:bg-[#002582] hover:text-white transition-all shadow-xs active:scale-95 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#002582]"
+              className="w-12 h-12 rounded-full border border-[#DADADA] bg-white flex items-center justify-center text-black hover:border-[#002582] hover:bg-gradient-to-r hover:from-[#002582] hover:to-[#123fb8] hover:text-white hover:shadow-[0_12px_28px_-10px_rgba(0,37,130,0.5)] transition-all shadow-xs active:scale-95 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#002582]"
             >
               <ArrowRight className="w-5 h-5" />
             </button>

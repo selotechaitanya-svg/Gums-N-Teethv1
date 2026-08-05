@@ -8,6 +8,9 @@ import {
   MessageCircle,
   CalendarCheck,
 } from 'lucide-react';
+import { AmbientBackground } from './ui/AmbientBackground';
+import { SectionHeading } from './ui/SectionHeading';
+import { MagneticButton } from './ui/MagneticButton';
 
 interface AppointmentSectionProps {
   initialService?: string;
@@ -34,27 +37,21 @@ export const AppointmentSection: React.FC<AppointmentSectionProps> = ({
       id="contact"
       className="py-20 md:py-32 bg-[#f0eeed] scroll-mt-20 relative overflow-hidden"
     >
-      {/* Decorative blobs */}
-      <div className="blob top-[5%] right-[-10%] w-[420px] h-[420px] bg-[#002582]/8" />
-      <div className="blob bottom-[-10%] left-[-8%] w-[400px] h-[400px] bg-sky-300/25" />
+      <AmbientBackground variant="light" />
 
       <div className="relative max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-12">
         {/* Section Heading */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="mb-12 md:mb-16"
-        >
-          <div className="eyebrow-pill mb-4">
-            <CalendarCheck className="w-4 h-4" />
-            <span>Book Your Visit</span>
-          </div>
-          <h2 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-medium tracking-tight text-[#002582]">
-            Make an <span className="text-gradient-blue">appointment</span>
-          </h2>
-        </motion.div>
+        <div className="mb-12 md:mb-16">
+          <SectionHeading
+            eyebrow="Book Your Visit"
+            eyebrowIcon={<CalendarCheck className="w-4 h-4" />}
+            title={
+              <>
+                Make an <span className="text-gradient-blue">appointment</span>
+              </>
+            }
+          />
+        </div>
 
         {/* Global Grid: Left Form + Right Media */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
@@ -131,7 +128,7 @@ export const AppointmentSection: React.FC<AppointmentSectionProps> = ({
                     placeholder="Full name"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="w-full bg-white px-6 py-4 rounded-full border border-black/10 text-base text-black placeholder:text-black/40 focus:outline-none focus:border-[#002582] focus:ring-2 focus:ring-[#002582]/15 transition-all shadow-2xs"
+                    className="input-premium"
                   />
                 </div>
 
@@ -141,14 +138,14 @@ export const AppointmentSection: React.FC<AppointmentSectionProps> = ({
                     placeholder="Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full bg-white px-6 py-4 rounded-full border border-black/10 text-base text-black placeholder:text-black/40 focus:outline-none focus:border-[#002582] focus:ring-2 focus:ring-[#002582]/15 transition-all shadow-2xs"
+                    className="input-premium"
                   />
                   <input
                     type="tel"
                     placeholder="Phone Number"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="w-full bg-white px-6 py-4 rounded-full border border-black/10 text-base text-black placeholder:text-black/40 focus:outline-none focus:border-[#002582] focus:ring-2 focus:ring-[#002582]/15 transition-all shadow-2xs"
+                    className="input-premium"
                   />
                 </div>
 
@@ -156,7 +153,7 @@ export const AppointmentSection: React.FC<AppointmentSectionProps> = ({
                   <select
                     value={service}
                     onChange={(e) => setService(e.target.value)}
-                    className="w-full bg-white px-6 py-4 rounded-full border border-black/10 text-base text-black/80 focus:outline-none focus:border-[#002582] focus:ring-2 focus:ring-[#002582]/15 transition-all shadow-2xs cursor-pointer appearance-none"
+                    className="input-premium cursor-pointer appearance-none"
                   >
                     <option value="">Select preferred service (optional)</option>
                     {SERVICES_DATA.map((s) => (
@@ -173,18 +170,20 @@ export const AppointmentSection: React.FC<AppointmentSectionProps> = ({
                     placeholder="Add a message (optional)"
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    className="w-full bg-white px-6 py-4 rounded-full border border-black/10 text-base text-black placeholder:text-black/40 focus:outline-none focus:border-[#002582] focus:ring-2 focus:ring-[#002582]/15 transition-all shadow-2xs"
+                    className="input-premium"
                   />
                 </div>
 
                 <div className="pt-2">
-                  <button
-                    type="submit"
-                    className="btn-dazzle text-base py-4 px-8 w-full sm:w-auto cursor-pointer"
-                  >
-                    <span>Schedule a consultation</span>
-                    <ArrowRight className="w-5 h-5" />
-                  </button>
+                  <MagneticButton strength={0.2} className="block w-full sm:w-fit">
+                    <button
+                      type="submit"
+                      className="btn-dazzle text-base py-4 px-8 w-full sm:w-auto cursor-pointer"
+                    >
+                      <span>Schedule a consultation</span>
+                      <ArrowRight className="w-5 h-5" />
+                    </button>
+                  </MagneticButton>
                 </div>
               </form>
             )}
@@ -217,10 +216,12 @@ export const AppointmentSection: React.FC<AppointmentSectionProps> = ({
             </div>
 
             {/* Feature Image */}
-            <div className="relative w-full aspect-[4/3] sm:aspect-[16/11] rounded-3xl overflow-hidden border border-black/10 shadow-xl bg-white group">
+            <div className="relative w-full aspect-[4/3] sm:aspect-[16/11] rounded-3xl overflow-hidden border-4 border-white shadow-[0_32px_80px_-24px_rgba(0,0,0,0.45)] bg-white group glow-ring">
               <img
                 src="https://cdn.prod.website-files.com/68cd8c43866f068b45798eed/68d02b9a319e6069ae005482_0d9749f321512f8580cb8e2380d0fec1_form.webp"
                 alt="Close-up of dental procedure patient"
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />

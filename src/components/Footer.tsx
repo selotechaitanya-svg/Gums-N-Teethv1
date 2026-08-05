@@ -153,7 +153,7 @@ export const Footer: React.FC = () => {
               href={GOOGLE_MAPS_LINK}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-[#002582] text-white px-4 py-2.5 rounded-full text-sm font-semibold hover:bg-black transition-colors shadow-xs group"
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-[#002582] to-[#123fb8] text-white px-4 py-2.5 rounded-full text-sm font-semibold hover:from-black hover:to-black transition-all shadow-[0_10px_28px_-10px_rgba(0,37,130,0.5)] group"
             >
               <span>Google Maps Location</span>
               <ArrowUpRight className="w-4 h-4 text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
@@ -173,7 +173,7 @@ export const Footer: React.FC = () => {
             className="inline-flex items-center gap-2 text-sm font-semibold text-[#002582] hover:text-black transition-colors cursor-pointer group"
           >
             <span>Back to top</span>
-            <div className="w-8 h-8 rounded-full bg-white border border-black/10 flex items-center justify-center group-hover:-translate-y-1 group-hover:bg-[#002582] group-hover:text-white transition-all">
+            <div className="w-8 h-8 rounded-full bg-white border border-black/10 flex items-center justify-center group-hover:-translate-y-1 group-hover:bg-gradient-to-r group-hover:from-[#002582] group-hover:to-[#123fb8] group-hover:text-white transition-all">
               <ArrowUp className="w-4 h-4 text-current" />
             </div>
           </button>

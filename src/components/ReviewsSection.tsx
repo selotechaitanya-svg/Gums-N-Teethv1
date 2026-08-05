@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Star, CheckCircle2, ExternalLink, X, MapPin } from 'lucide-react';
 import { GoogleReview } from '../types';
 import { GOOGLE_REVIEWS_DATA, GOOGLE_MAPS_LINK } from '../data/googleReviewsData';
+import { AmbientBackground } from './ui/AmbientBackground';
+import { SectionHeading } from './ui/SectionHeading';
 
 // Google colorful SVG icon
 const GoogleIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5" }) => (
@@ -59,30 +61,20 @@ export const ReviewsSection: React.FC = () => {
 
   return (
     <section id="reviews" className="py-20 md:py-32 bg-[#f0eeed] relative overflow-hidden scroll-mt-20">
-      <div className="max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-12">
+      <AmbientBackground variant="light" />
+
+      <div className="relative max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-12">
         {/* Section Heading & Rating Badge */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 md:mb-16">
-          <div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="eyebrow-pill mb-4"
-            >
-              <GoogleIcon className="w-4 h-4" />
-              <span>Google Reviews</span>
-            </motion.div>
-            <motion.h2
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="font-display text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-[#002582]"
-            >
-              What Our Patients <span className="text-gradient-blue">Say</span>
-            </motion.h2>
-          </div>
+          <SectionHeading
+            eyebrow="Google Reviews"
+            eyebrowIcon={<GoogleIcon className="w-4 h-4" />}
+            title={
+              <>
+                What Our Patients <span className="text-gradient-blue">Say</span>
+              </>
+            }
+          />
 
           {/* Aggregate Rating & Google Maps Button */}
           <motion.div
@@ -92,8 +84,8 @@ export const ReviewsSection: React.FC = () => {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="flex flex-wrap items-center gap-4"
           >
-            <div className="bg-white border border-black/10 rounded-2xl p-3.5 sm:p-4 flex items-center gap-3.5 shadow-2xs card-lift">
-              <div className="flex flex-col items-center justify-center bg-[#002582]/5 px-3.5 py-2 rounded-xl">
+            <div className="bg-white border border-black/10 rounded-2xl p-3.5 sm:p-4 flex items-center gap-3.5 shadow-2xs card-lift hover:shadow-[0_20px_48px_-16px_rgba(0,37,130,0.3)]">
+              <div className="flex flex-col items-center justify-center bg-gradient-to-br from-[#002582]/8 to-sky-300/20 px-3.5 py-2 rounded-xl">
                 <span className="text-2xl font-bold text-[#002582] leading-none">5.0</span>
                 <div className="flex items-center gap-0.5 mt-1">
                   {[...Array(5)].map((_, i) => (
@@ -146,9 +138,13 @@ export const ReviewsSection: React.FC = () => {
                 tabIndex={0}
                 role="article"
                 aria-label={`Review by ${review.authorName}`}
-                className="w-[320px] sm:w-[360px] md:w-[380px] shrink-0 bg-white rounded-[20px] border border-[#E5E7EB] p-6 sm:p-7 shadow-2xs hover:shadow-2xl hover:shadow-black/10 hover:border-[#002582] hover:scale-[1.05] hover:-translate-y-2 transition-all duration-300 ease-out cursor-pointer flex flex-col justify-between group select-none relative focus:outline-none focus:ring-2 focus:ring-[#002582]"
+                className="w-[320px] sm:w-[360px] md:w-[380px] shrink-0 bg-white rounded-[20px] border border-[#E5E7EB] p-6 sm:p-7 shadow-2xs hover:shadow-[0_28px_60px_-18px_rgba(0,37,130,0.35)] hover:border-[#002582]/25 hover:scale-[1.05] hover:-translate-y-2 transition-all duration-300 ease-out cursor-pointer flex flex-col justify-between group select-none relative focus:outline-none focus:ring-2 focus:ring-[#002582] overflow-hidden"
                 onClick={() => isLong && setSelectedReview(review)}
               >
+                {/* Top gradient hairline on hover */}
+                <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#002582] via-sky-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                {/* Soft corner glow */}
+                <div className="absolute -top-10 -right-10 w-28 h-28 rounded-full bg-gradient-to-br from-sky-300/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 {/* Top Row: Reviewer Avatar Badge + Name + Google Logo */}
                 <div>
                   <div className="flex items-start justify-between gap-3 mb-4">

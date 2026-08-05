@@ -3,6 +3,9 @@ import { motion, AnimatePresence } from 'motion/react';
 import { SERVICES_DATA } from '../data/dazzleData';
 import { ServiceItem } from '../types';
 import { ArrowUpRight, Plus, Stethoscope } from 'lucide-react';
+import { AmbientBackground } from './ui/AmbientBackground';
+import { SectionHeading } from './ui/SectionHeading';
+import { MagneticButton } from './ui/MagneticButton';
 
 interface ServicesSectionProps {
   onSelectService: (service: ServiceItem) => void;
@@ -22,49 +25,49 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
       id="services"
       className="py-20 md:py-32 bg-[#f0eeed] scroll-mt-20 relative overflow-hidden"
     >
-      {/* Decorative blob */}
-      <div className="blob top-[20%] left-[-10%] w-[420px] h-[420px] bg-[#002582]/8" />
+      <AmbientBackground variant="light" />
 
       <div className="relative max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-12">
         {/* Services Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 pb-8 border-b border-black/10">
-          <div>
+          <SectionHeading
+            eyebrow="What We Offer"
+            eyebrowIcon={<Stethoscope className="w-4 h-4" />}
+            title={
+              <>
+                <span className="text-[#002582]">services</span>{' '}
+                <span className="text-gradient-blue">&amp; care</span>
+              </>
+            }
+          />
+
+          <div className="max-w-md flex flex-col gap-6">
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+              className="text-base sm:text-lg text-black/70 leading-relaxed"
+            >
+              Our dental clinic offers a wide range of services to fully meet the
+              needs and expectations of our patients.
+            </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="eyebrow-pill mb-4"
+              transition={{ duration: 0.7, delay: 0.2 }}
             >
-              <Stethoscope className="w-4 h-4" />
-              <span>What We Offer</span>
+              <MagneticButton strength={0.25}>
+                <button
+                  onClick={onOpenConsultation}
+                  className="btn-dazzle text-sm md:text-base cursor-pointer"
+                >
+                  <span>Schedule a consultation</span>
+                  <ArrowUpRight className="w-4 h-4" />
+                </button>
+              </MagneticButton>
             </motion.div>
-            <motion.h2
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7 }}
-              className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-medium tracking-tight lowercase"
-            >
-              <span className="text-[#002582]">services</span>{' '}
-              <span className="text-gradient-blue">&amp; care</span>
-            </motion.h2>
-          </div>
-
-          <div className="max-w-md flex flex-col gap-6">
-            <p className="text-base sm:text-lg text-black/70 leading-relaxed">
-              Our dental clinic offers a wide range of services to fully meet the
-              needs and expectations of our patients.
-            </p>
-            <div>
-              <button
-                onClick={onOpenConsultation}
-                className="btn-dazzle text-sm md:text-base cursor-pointer"
-              >
-                <span>Schedule a consultation</span>
-                <ArrowUpRight className="w-4 h-4" />
-              </button>
-            </div>
           </div>
         </div>
 
@@ -134,7 +137,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
 
           {/* Dynamic Image Sticky Preview (Desktop) */}
           <div className="hidden lg:block lg:col-span-5 sticky top-32">
-            <div className="relative aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border border-black/10 bg-white">
+            <div className="relative aspect-[4/5] rounded-3xl overflow-hidden shadow-[0_32px_80px_-24px_rgba(0,0,0,0.5)] border-4 border-white bg-white glow-ring">
               <AnimatePresence mode="wait">
                 {hoveredService && (
                   <motion.div
@@ -148,6 +151,8 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                     <img
                       src={hoveredService.image}
                       alt={hoveredService.title}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent p-8 flex flex-col justify-end text-white">
@@ -162,7 +167,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                       </p>
                       <button
                         onClick={() => onSelectService(hoveredService)}
-                        className="inline-flex items-center gap-2 bg-white text-[#002582] w-fit px-5 py-2.5 rounded-full text-sm font-bold hover:bg-[#002582] hover:text-white transition-colors"
+                        className="inline-flex items-center gap-2 bg-white text-[#002582] w-fit px-5 py-2.5 rounded-full text-sm font-bold hover:bg-[#002582] hover:text-white transition-colors shadow-xl"
                       >
                         <span>Learn more & book</span>
                         <ArrowUpRight className="w-4 h-4" />

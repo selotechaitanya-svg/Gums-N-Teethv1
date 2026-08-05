@@ -12,6 +12,7 @@ import { OfficeInfoSection } from './components/OfficeInfoSection';
 import { CtaBanner } from './components/CtaBanner';
 import { Footer } from './components/Footer';
 import { ServiceModal } from './components/ServiceModal';
+import { Spotlight } from './components/ui/Spotlight';
 import { ServiceItem } from './types';
 
 export default function App() {
@@ -29,7 +30,10 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f0eeed] text-[#0d0d0d] font-sans antialiased selection:bg-[#002582] selection:text-white">
+    <div className="relative min-h-screen bg-[#f0eeed] text-[#0d0d0d] font-sans antialiased selection:bg-[#002582] selection:text-white">
+      {/* Mouse-following spotlight */}
+      <Spotlight />
+
       {/* Navigation Header */}
       <Navbar onOpenConsultation={() => scrollToAppointment()} />
 
